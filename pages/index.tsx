@@ -1,9 +1,60 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { Appwrite } from "appwrite";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
+  const appwrite = new Appwrite();
+  appwrite
+    .setEndpoint("http://localhost/v1") // Your Appwrite Endpoint
+    .setProject("6172c85ed4ff1"); // Your project ID
+
+  const createDocument = () => {
+    let promise = appwrite.database.createDocument("6172c87635dcf", {
+      name: "laundry",
+    });
+    promise.then(
+      function (response) {
+        console.log(response); // Success
+      },
+      function (error) {
+        console.log(error); // Failure
+      }
+    );
+  };
+  const createAccount = () => {
+    let promise = appwrite.account.create(
+      "thaekeh@gmail.com",
+      "mypassword",
+      "Thaeke"
+    );
+    promise.then(
+      function (response) {
+        console.log(response); // Success
+      },
+      function (error) {
+        console.log(error); // Failure
+      }
+    );
+  };
+
+  const login = () => {
+    let promise = appwrite.account.createSession(
+      "thaekeh@gmail.com",
+      "mypassword"
+    );
+
+    promise.then(
+      function (response) {
+        console.log(response); // Success
+      },
+      function (error) {
+        console.log(error); // Failure
+      }
+    );
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -12,13 +63,23 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div>
+        <button onClick={createAccount}>Create Account</button>
+      </div>
+      <div>
+        <button onClick={login}>Login</button>
+      </div>
+      <div>
+        <button onClick={createDocument}>Create Document</button>
+      </div>
+
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -59,14 +120,14 @@ const Home: NextPage = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
